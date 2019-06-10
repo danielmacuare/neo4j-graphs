@@ -1,0 +1,28 @@
+---
+# Nodes
+FW:
+    'FW-A':
+        'name': 'FW-A'
+        'location': 'lhr4'
+        'commisioned_on': '26/07/19'
+    'FW-B':
+        'name': 'FW-B'
+        'location': 'ams4'
+        'commisioned_on': '25/07/17'
+    'FW-C':
+        'name': 'FW-C'
+        'location': 'man2'
+        'commisioned_on': '25/01/16'
+SUBNET:
+    '10.171.0.0/19':
+        'name': '10.171.0.0/19'
+        'host_grp': 'MAN OFFICES'
+    '10.177.0.0/16':
+        'name': '10.171.0.0/16'
+        'host_grp': 'AMS4 PROD'
+    '10.184.0.0/14':
+        'name': '10.184.0.0/16'
+        'host_grp': 'LHR4 PROD'
+    '10.204.0.0/16':
+        'name': '10.204.0.0/16'
+        'host_grp': 'AWS PROD'
