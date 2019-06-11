@@ -41,17 +41,18 @@ def create_nodes(node_label='Firewall', **kwargs):
     - A string with the node label.
     - A dictionary with the all teh properties of the node.
     '''
-    if kwargs['name']:
+    if kwargs.get('name'):
         #for properties in kwargs:
         print(f'Creating "{device.upper()}" as a "{node_label.upper()}" Node')
 
         neo_nodes = Node(node_label, **kwargs)
         graph.create(neo_nodes)
 
-        print(f'The "{device.upper()}" Node has been successfully created'
-              f' in the DB\n\n')
+        print(f'The "{device.upper()}" Node has been successfully created '
+              f'in the DB\n\n')
     else:
-        print(f'The {device.upper()}node must contain a property called "name"')
+        print(f'ERROR: The {device.upper()} node must contain a property '
+              f'called "name"\n')
 
 
 if __name__ == '__main__':
