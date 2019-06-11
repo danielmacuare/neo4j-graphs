@@ -61,22 +61,22 @@ def create_nodes(nodes_dict):
             '10.204.0.0/16': {'host_grp': 'AWS PROD', 'name': '10.204.0.0/16'}}}
     '''
     for label, content in nodes_dict.items():
-        for node_label, properties in content.items():
+        for node_id, properties in content.items():
             # print(label)
-            # print(node_label)
+            # print(node_id)
             # print(properties)
             if properties.get('name'):
                 #ipdb.set_trace()
                 device = properties['name']
-                print(f'Creating "{device.upper()}" as a '
-                      f'"{node_label.upper()}" Node')
-                neo_nodes = Node(node_label, **properties)
+                print(f'Creating "{node_id.upper()}" as a '
+                      f'"{label.upper()}" Node')
+                neo_nodes = Node(label, **properties)
                 graph.create(neo_nodes)
-                print(f'The "{device.upper()}" Node has been successfully'
-                      f'created in the DB\n\n')
+                print(f'{label.upper()}.name = "{device.upper()}" Node has been successfully '
+                      f'created in the DB.\n')
             else:
-                print(f'ERROR: The {device.upper()} node must contain a '
-                      f'property called "name"\n')
+                print(f'** ERROR: The {node_id.upper()} node must contain a '
+                      f'property called "name".\n\n')
     return None
 
 
