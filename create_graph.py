@@ -2,6 +2,9 @@
 import sys
 
 '''
+TO-DO:
+logging
+
 The following module has basic functions to:
 Create_nodes()
 Delete_nodes()
@@ -16,61 +19,76 @@ import sys
 import yaml
 
 
-def yaml_to_python(yaml_file=None):
-    if yaml_file:
-        with open(yaml_file, 'r') as yaml_data:
-            try:
-                py_data = yaml.safe_load(yaml_data)
-                return py_data
-            except yaml.YAMLError as err:
-                print(err)
-    else:
-        print('A file has not been passed to the function yaml_to_python()')
-        return None
-
-
 def delete_db(graph):
     print('Cleaning the Database')
     graph.delete_all()
     return None
 
 
-def create_nodes(node_label='Firewall', **kwargs):
+def yaml_to_python(yaml_file=None):
+    if yaml_file:
+        with open(yaml_file, 'r') as nodes_yaml:
+            try:
+                nodes_dict = yaml.safe_load(nodes_yaml)
+                return nodes_dict
+            except yaml.YAMLError as err:
+                print(err)
+    else:
+        print(f'ERROR: A file has not been passed to the function '
+              f'yaml_to_python()')
+        return None
+
+
+def create_nodes(nodes_dict):
     '''
     This function will receive:
-    - A string with the node label.
-    - A dictionary with the all teh properties of the node.
+    - A dictionary with the nodes and all its properties and will create
+    a graph.
+    Next, you can find the structure of the dictionary:
+{'FW': {'FW-A': {'commisioned_on': '26/07/19',
+                 'location': 'lhr4',
+                 'name': 'FW-A'},
+        'FW-B': {'commisioned_on': '25/07/17',
+                 'location': 'ams4',
+                 'text': 'FW-B'},
+        'FW-C': {'commisioned_on': '25/01/16',
+                 'location': 'man2',
+                 'name': 'FW-C'}},
+ 'SUBNET': {'10.171.0.0/19': {'host_grp': 'MAN OFFICES',
+                              'name': '10.171.0.0/19'},
+            '10.177.0.0/16': {'host_grp': 'AMS4 PROD', 'name': '10.171.0.0/16'},
+            '10.184.0.0/14': {'host_grp': 'LHR4 PROD', 'name': '10.184.0.0/16'},
+            '10.204.0.0/16': {'host_grp': 'AWS PROD', 'name': '10.204.0.0/16'}}}
     '''
-    if kwargs.get('name'):
-        #for properties in kwargs:
-        print(f'Creating "{device.upper()}" as a "{node_label.upper()}" Node')
-
-        neo_nodes = Node(node_label, **kwargs)
-        graph.create(neo_nodes)
-
-        print(f'The "{device.upper()}" Node has been successfully created '
-              f'in the DB\n\n')
-    else:
-        print(f'ERROR: The {device.upper()} node must contain a property '
-              f'called "name"\n')
+    for label, content in nodes_dict.items():
+        for node_label, properties in content.items():
+            # print(label)
+            # print(node_label)
+            # print(properties)
+            if properties.get('name'):
+                #ipdb.set_trace()
+                device = properties['name']
+                print(f'Creating "{device.upper()}" as a '
+                      f'"{node_label.upper()}" Node')
+                neo_nodes = Node(node_label, **properties)
+                graph.create(neo_nodes)
+                print(f'The "{device.upper()}" Node has been successfully'
+                      f'created in the DB\n\n')
+            else:
+                print(f'ERROR: The {device.upper()} node must contain a '
+                      f'property called "name"\n')
+    return None
 
 
 if __name__ == '__main__':
+    # Secure Way
+    # password = getpass('Please input the password to connect to the DB: ') 
+    # graph = Graph('http://127.0.0.1:7474', user='neo4j', password='neo4lab')
 
-    nodes = yaml_to_python('nodes.yaml')
-    #pprint(nodes)
-    #password = getpass('Please input the password to connect to the DB: ') #Secure Way
     graph = Graph('bolt://127.0.0.1:7687', user='neo4j', password='neo4lab')
-    #graph = Graph('http://127.0.0.1:7474', user='neo4j', password='neo4lab')
     delete_db(graph)
-
-# TO_DO - Pass this to the create_nodes function.
-    #ipdb.set_trace()
-    for label, content in nodes.items():
-        for device, properties in content.items():
-            #print(label)
-            #print(device)
-            #print(properties)
-            create_nodes(label, **properties)
+    nodes_dict = yaml_to_python('nodes.yaml')
+    # pprint(nodes)
+    create_nodes(nodes_dict)
 
     sys.exit()
