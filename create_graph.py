@@ -66,13 +66,12 @@ def create_nodes(nodes_dict):
             # print(node_id)
             # print(properties)
             if properties.get('name'):
-                #ipdb.set_trace()
+                # ipdb.set_trace()
                 device = properties['name']
-                print(f'Creating "{node_id.upper()}" as a '
-                      f'"{label.upper()}" Node')
+                print(f'Creating "{node_id}" as a "{label}" Node')
                 neo_nodes = Node(label, **properties)
                 graph.create(neo_nodes)
-                print(f'{label.upper()}.name = "{device.upper()}" Node has been successfully '
+                print(f'{node_id}.name = "{device}" Node has been '
                       f'created in the DB.\n')
             else:
                 print(f'** ERROR: The {node_id.upper()} node must contain a '
@@ -80,9 +79,14 @@ def create_nodes(nodes_dict):
     return None
 
 
+def create_rel(start_node, end_node, relation, **rel_props):
+    # graph.create(src, relation, dst, **rel_props)
+    graph.create(start_node, relation, end_node, rel_props)
+
+
 if __name__ == '__main__':
     # Secure Way
-    # password = getpass('Please input the password to connect to the DB: ') 
+    # password = getpass('Please input the password to connect to the DB: ')
     # graph = Graph('http://127.0.0.1:7474', user='neo4j', password='neo4lab')
 
     graph = Graph('bolt://127.0.0.1:7687', user='neo4j', password='neo4lab')
@@ -90,5 +94,11 @@ if __name__ == '__main__':
     nodes_dict = yaml_to_python('nodes.yaml')
     # pprint(nodes)
     create_nodes(nodes_dict)
+
+    start_node = Node('Subnet', name='10.171.0.0/19')
+    relation = 'PART_OF'
+    rel_props = {'cost': 5, 'created_on': '12/06/19'}
+    end_node = Node('SecZone', name='LAN', attached_to='man2-rc-int240-cl1')
+    create_rel(start_node, end_node, relation, **rel_props)
 
     sys.exit()
