@@ -25,7 +25,7 @@ def delete_db(graph):
     return None
 
 
-def yaml_to_python(yaml_file=None):
+def parse_yaml(yaml_file=None):
     if yaml_file:
         with open(yaml_file, 'r') as nodes_yaml:
             try:
@@ -34,8 +34,7 @@ def yaml_to_python(yaml_file=None):
             except yaml.YAMLError as err:
                 print(err)
     else:
-        print(f'ERROR: A file has not been passed to the function '
-              f'yaml_to_python()')
+        print(f'** ERROR: Please pass a yaml file to the function')
         return None
 
 
@@ -79,9 +78,24 @@ def create_nodes(nodes_dict):
     return None
 
 
-def create_rel(start_node, end_node, relation, **rel_props):
-    # graph.create(src, relation, dst, **rel_props)
-    graph.create(start_node, relation, end_node, rel_props)
+def create_relationships(relationships_dict):
+    data = relationships_dict
+    for rel_type, rel_name in data.items():
+        # pprint(rel_type)
+        # pprint(rel_name)
+        for rel_desc, rel_prop in rel_name.items():
+            pprint(rel_desc)
+            pprint(rel_prop)
+
+        # ipdb.set_trace() 
+#     from_node = Node('Subnet', name='10.171.0.0/19')
+#     relation = 'PART_OF'
+#     rel_props = {'cost': 5, 'created_on': '12/06/19'}
+#     to_node = Node('SecZone', name='LAN', attached_to='man2-rc-int240-cl1')
+#     create_rel(start_node, end_node, relation, **rel_props)
+#     # graph.create(src, relation, dst, **rel_props)
+#     graph.create(start_node, relation, end_node, rel_props)
+    return None
 
 
 if __name__ == '__main__':
@@ -91,14 +105,10 @@ if __name__ == '__main__':
 
     graph = Graph('bolt://127.0.0.1:7687', user='neo4j', password='neo4lab')
     delete_db(graph)
-    nodes_dict = yaml_to_python('nodes.yaml')
-    # pprint(nodes)
+    nodes_dict = parse_yaml('nodes.yaml')
+    relationships_dict = parse_yaml('relationships.yaml')
+    pprint(relationships_dict)
     create_nodes(nodes_dict)
-
-    start_node = Node('Subnet', name='10.171.0.0/19')
-    relation = 'PART_OF'
-    rel_props = {'cost': 5, 'created_on': '12/06/19'}
-    end_node = Node('SecZone', name='LAN', attached_to='man2-rc-int240-cl1')
-    create_rel(start_node, end_node, relation, **rel_props)
+    create_relationships(relationships_dict)
 
     sys.exit()
