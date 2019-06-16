@@ -84,17 +84,44 @@ def create_relationships(relationships_dict):
         # pprint(rel_type)
         # pprint(rel_name)
         for rel_desc, rel_prop in rel_name.items():
-            pprint(rel_desc)
-            pprint(rel_prop)
+            # pprint(rel_desc)
+            # pprint(rel_prop)
+            relation = rel_prop['label']
+            relation_properties = rel_prop['label_prop']
+            # ipdb.set_trace()
+            from_label = rel_prop['from']['label']
+            to_label = rel_prop['to']['label']
+            # TO_DO Make this a fucntion called parse_properties() ->(from_prop, to_prop)
+            for prop_names, prop_values in rel_prop.items():
+                #pprint(prop_names)
+                #pprint(prop_values)
+                if prop_names == 'from':
+                    from_properties = prop_values.copy()
+                    from_properties.pop('label')
+                    print(from_properties)
+                if prop_names == 'to':
+                    to_properties = prop_values.copy()
+                    to_properties.pop('label')
+                    print(to_properties)
+            from_node = Node(from_label, **from_properties)
+            to_node = Node(to_label, **to_properties)
+            #ipdb.set_trace()
+            create_relation = Relationship(from_node, relation, to_node, **relation_properties)
+            graph.create(create_relation)
 
-        # ipdb.set_trace() 
+
+
+
 #     from_node = Node('Subnet', name='10.171.0.0/19')
 #     relation = 'PART_OF'
 #     rel_props = {'cost': 5, 'created_on': '12/06/19'}
 #     to_node = Node('SecZone', name='LAN', attached_to='man2-rc-int240-cl1')
+#     graph.create(start_node, relation, end_node, rel_props)
+
+
+
 #     create_rel(start_node, end_node, relation, **rel_props)
 #     # graph.create(src, relation, dst, **rel_props)
-#     graph.create(start_node, relation, end_node, rel_props)
     return None
 
 

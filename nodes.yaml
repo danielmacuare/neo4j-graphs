@@ -1,28 +1,54 @@
 ---
 # Nodes
 FW:
-    'FW-A':
-        'name': 'FW-A'
+    'FW-1':
+        'name': 'lhr4-rc-core1500-cl1'
         'location': 'lhr4'
         'commisioned_on': '26/07/19'
-    'FW-B':
-        'name': 'FW-B'
+    'FW-2':
+        'name': 'ams4-rc-core1500-cl1'
         'location': 'ams4'
         'commisioned_on': '25/07/17'
-    'FW-C':
-        'name': 'FW-C'
+    'FW-3':
+        'name': 'man2-rc-int240-cl1'
         'location': 'man2'
         'commisioned_on': '25/01/16'
-SUBNET:
-    '10.171.0.0/19':
+Subnet:
+    'SUB-1':
         'name': '10.171.0.0/19'
-        'host_grp': 'MAN OFFICES'
-    '10.177.0.0/16':
-        'name': '10.171.0.0/16'
-        'host_grp': 'AMS4 PROD'
-    '10.184.0.0/14':
+        'host_grp': 'MAN_OFFICES'
+    'SUB-2':
+        'name': '10.177.0.0/16'
+        'host_grp': 'AMS4_PROD'
+    'SUB-3':
         'name': '10.184.0.0/16'
-        'host_grp': 'LHR4 PROD'
-    '10.204.0.0/16':
+        'host_grp': 'LHR4_PROD'
+    'SUB-4':
         'name': '10.204.0.0/16'
-        'host_grp': 'AWS PROD'
+        'host_grp': 'AWS_PROD'
+SecZone:
+    'MAN2-LAN':
+        'name': 'LAN'
+        'host_grp': 'MAN_OFFICES'
+        'attached_to': 'man2-rc-int240-cl1'
+    'MAN2-WAN':
+        'name': 'WAN'
+        'host_grp': ['AMS4_PROD', 'LHR4_PROD', 'AWS_PROD']
+        'attached_to': 'man2-rc-int240-cl1'
+    'LHR4-CORE-OUT':
+        'name': 'OUTSIDE'
+        'host_grp': 'OFFICES'
+        'attached_to': 'lhr4-rc-core1500-cl1'
+    'LHR4-CORE-IN':
+        'name': 'INSIDE'
+        'host_grp': ['LHR4_PROD', 'AMS4_PROD', 'AWS_PROD']
+        'attached_to': 'lhr4-rc-core1500-cl1'
+    'AMS4-CORE-OUT':
+        'name': 'OUTSIDE'
+        'host_grp': 'OFFICES'
+        'attached_to': 'ams4-rc-core1500-cl1'
+    'AMS4-CORE-IN':
+        'name': 'INSIDE'
+        'host_grp': ['LHR4_PROD', 'AMS4_PROD', 'AWS_PROD']
+        'attached_to': 'ams4-rc-core1500-cl1'
+

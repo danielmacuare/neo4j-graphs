@@ -5,3 +5,8 @@ Subnet_to_SecZone:
         to: {'label': 'SecZone', name: 'LAN', 'attached_to': 'man2-rc-int240-cl1'}
         label: 'PART_OF'
         label_prop: {'cost': 5, 'created_on': '12/06/19'}
+    10.204-OUT-LHR4-CORE:
+        from: {'label': 'Subnet', name: '10.204.0.0/16'}
+        to: {'label': 'SecZone', name: 'OUTSIDE', 'attached_to': 'lhr4-rc-core1500-cl1'}
+        label: 'PART_OF'
+        label_prop: {'cost': 1, 'created_on': '12/06/19'}
