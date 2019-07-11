@@ -78,50 +78,50 @@ def create_nodes(nodes_dict):
     return None
 
 
+def get_relationship_properties(rel_properties):
+    """ 
+    Takes a dictionary with the relationship properties, like:
+    {'from': {'label': 'Subnet', 'name': '10.171.0.0/19'},
+     'label': 'PART_OF',
+     'label_prop': {'cost': 5, 'created_on': '12/06/19'},
+     'to': {'attached_to': 'man2-rc-int240-cl1', 'label': 'SecZone', 'name': 'LAN'}}   
+
+    Returns a tupple with 2x dictionaries from_properties and to_properties
+    """
+    for prop_names, prop_values in rel_properties.items():
+        # pprint(prop_names)
+        # pprint(prop_values)
+        if prop_names == 'from':
+            from_properties = prop_values.copy()
+            from_properties.pop('label')
+            print(from_properties)
+        if prop_names == 'to':
+            to_properties = prop_values.copy()
+            to_properties.pop('label')
+            print(to_properties)
+    return(from_properties, to_properties)
+
+
 def create_relationships(relationships_dict):
     data = relationships_dict
     for rel_type, rel_name in data.items():
         # pprint(rel_type)
         # pprint(rel_name)
-        for rel_desc, rel_prop in rel_name.items():
+        for rel_desc, rel_properties in rel_name.items():
             # pprint(rel_desc)
-            # pprint(rel_prop)
-            relation = rel_prop['label']
-            relation_properties = rel_prop['label_prop']
+            # pprint(rel_properties)
+            relation = rel_properties['label']
+            relation_label = rel_properties['label_prop']
+            print(relation_label)
             # ipdb.set_trace()
-            from_label = rel_prop['from']['label']
-            to_label = rel_prop['to']['label']
-            # TO_DO Make this a fucntion called parse_properties() ->(from_prop, to_prop)
-            for prop_names, prop_values in rel_prop.items():
-                #pprint(prop_names)
-                #pprint(prop_values)
-                if prop_names == 'from':
-                    from_properties = prop_values.copy()
-                    from_properties.pop('label')
-                    print(from_properties)
-                if prop_names == 'to':
-                    to_properties = prop_values.copy()
-                    to_properties.pop('label')
-                    print(to_properties)
+            from_label = rel_properties['from']['label']
+            to_label = rel_properties['to']['label']
+            from_properties, to_properties = get_relationship_properties(rel_properties)
             from_node = Node(from_label, **from_properties)
             to_node = Node(to_label, **to_properties)
-            #ipdb.set_trace()
-            create_relation = Relationship(from_node, relation, to_node, **relation_properties)
+            create_relation = Relationship(from_node, relation, to_node, **relation_label)
             graph.create(create_relation)
 
-
-
-
-#     from_node = Node('Subnet', name='10.171.0.0/19')
-#     relation = 'PART_OF'
-#     rel_props = {'cost': 5, 'created_on': '12/06/19'}
-#     to_node = Node('SecZone', name='LAN', attached_to='man2-rc-int240-cl1')
-#     graph.create(start_node, relation, end_node, rel_props)
-
-
-
-#     create_rel(start_node, end_node, relation, **rel_props)
-#     # graph.create(src, relation, dst, **rel_props)
     return None
 
 
